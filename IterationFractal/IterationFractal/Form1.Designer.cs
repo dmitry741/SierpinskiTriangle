@@ -36,7 +36,7 @@
             // 
             this.pictureBox1.Location = new System.Drawing.Point(12, 12);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(640, 640);
+            this.pictureBox1.Size = new System.Drawing.Size(720, 720);
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             this.pictureBox1.SizeChanged += new System.EventHandler(this.pictureBox1_SizeChanged);
@@ -45,14 +45,13 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(661, 660);
+            this.ClientSize = new System.Drawing.Size(742, 738);
             this.Controls.Add(this.pictureBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.Name = "Form1";
             this.Text = "Треугольник Серпинского";
             this.Load += new System.EventHandler(this.Form1_Load);
-            this.Paint += new System.Windows.Forms.PaintEventHandler(this.Form1_Paint);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 

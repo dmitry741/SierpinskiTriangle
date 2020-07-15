@@ -1,11 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace IterationFractal
@@ -17,105 +12,79 @@ namespace IterationFractal
             InitializeComponent();
         }
 
-        #region members
-
-        List<PointF> _points = new List<PointF>();
-        Bitmap _bitmap = null;
-        Random _random = new Random();
-
-        #endregion
-
         #region private
 
-        void CreateFractal()
+        void Start()
+        {
+            const float cShift = 16;
+            float len = pictureBox1.Width - 2 * cShift;
+
+            List<PointF> points = new List<PointF>
+            {
+                new PointF(cShift + len / 2, pictureBox1.Height - cShift - len * Convert.ToSingle(Math.Sin(Math.PI / 3))),
+                new PointF(cShift + len, pictureBox1.Height - cShift),
+                new PointF(cShift, pictureBox1.Height - cShift)
+            };
+
+            CreateFractal(points);
+            Render(points);
+        }
+
+        void CreateFractal(List<PointF> pointFs)
         {
             PointF curPoint = new PointF(pictureBox1.Width / 2, pictureBox1.Height / 2);
-            PointF point;
-            float level = 1.0f / 3.0f;
+            Random rnd = new Random();
 
-            for (int i = 0; i < 48000; i++)
+            for (int i = 0; i < 60000; i++)
             {
-                double r = _random.NextDouble();
+                int index = rnd.Next(3);
 
-                if (r < level)
-                {
-                    point = _points[0];
-                }
-                else if (r < 2 * level)
-                {
-                    point = _points[1];
-                }
-                else
-                {
-                    point = _points[2];
-                }
+                float X = (curPoint.X + pointFs[index].X) / 2;
+                float Y = (curPoint.Y + pointFs[index].Y) / 2;
 
-                float X = (curPoint.X + point.X) / 2;
-                float Y = (curPoint.Y + point.Y) / 2;
-
-                _points.Add(new PointF(X, Y));
+                pointFs.Add(new PointF(X, Y));
 
                 curPoint.X = X;
                 curPoint.Y = Y;
             }
         }
 
-        void CreateBitmap()
+        void Render(IEnumerable<PointF> points)
         {
-            if (pictureBox1.Width < 1 || pictureBox1.Height < 1)
-                return;
+            Bitmap bitmap = new Bitmap(pictureBox1.Width, pictureBox1.Height, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
 
-            _bitmap = new Bitmap(pictureBox1.Width, pictureBox1.Height, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
-        }
+            Rectangle r = new Rectangle(0, 0, bitmap.Width, bitmap.Height);
+            System.Drawing.Imaging.BitmapData bmpData = bitmap.LockBits(r, System.Drawing.Imaging.ImageLockMode.ReadWrite, bitmap.PixelFormat);
 
-        void Render()
-        {
-            if (_bitmap == null)
-                return;
-
-            Rectangle r = new Rectangle(0, 0, _bitmap.Width, _bitmap.Height);
-            System.Drawing.Imaging.BitmapData bmpData = _bitmap.LockBits(r, System.Drawing.Imaging.ImageLockMode.ReadWrite, _bitmap.PixelFormat);
-
-            int bytes = Math.Abs(bmpData.Stride) * _bitmap.Height;
+            int bytes = Math.Abs(bmpData.Stride) * bitmap.Height;
             byte[] rgbValues = new byte[bytes];
             Array.Clear(rgbValues, 0, bytes);
 
-            foreach (PointF point in _points)
+            foreach (PointF point in points)
             {
                 int X = Convert.ToInt32(point.X);
                 int Y = Convert.ToInt32(point.Y);
 
+                rgbValues[Y * Math.Abs(bmpData.Stride) + X * 3 + 0] = 255; // синий
                 rgbValues[Y * Math.Abs(bmpData.Stride) + X * 3 + 1] = 255; // зеленый
             }
 
             System.Runtime.InteropServices.Marshal.Copy(rgbValues, 0, bmpData.Scan0, bytes);
-            _bitmap.UnlockBits(bmpData);
+            bitmap.UnlockBits(bmpData);
 
-            pictureBox1.Image = _bitmap;
+            pictureBox1.Image = bitmap;
         }
 
         #endregion
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            pictureBox1.BackColor = Color.White;
-            CreateBitmap();
-
-            _points.Add(new PointF(pictureBox1.Width / 2, 20));
-            _points.Add(new PointF(pictureBox1.Width - 20, pictureBox1.Height - 20));
-            _points.Add(new PointF(20, pictureBox1.Height - 20));
-
-            CreateFractal();
+            Start();
         }
 
         private void pictureBox1_SizeChanged(object sender, EventArgs e)
         {
-            CreateBitmap();
-        }     
-
-        private void Form1_Paint(object sender, PaintEventArgs e)
-        {
-            Render();
+            Start();
         }
     }
 }
