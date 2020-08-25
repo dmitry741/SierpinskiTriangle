@@ -32,10 +32,10 @@ namespace IterationFractal
 
         void CreateFractal(List<PointF> pointFs)
         {
-            PointF curPoint = new PointF(pictureBox1.Width / 2, pictureBox1.Height / 2);
+            PointF curPoint = new PointF((pointFs[0].X + pointFs[1].X) / 2, (pointFs[0].Y + pointFs[1].Y) / 2);
             Random rnd = new Random();
 
-            for (int i = 0; i < 60000; i++)
+            for (int i = 0; i < 48000; i++)
             {
                 int index = rnd.Next(3);
 
