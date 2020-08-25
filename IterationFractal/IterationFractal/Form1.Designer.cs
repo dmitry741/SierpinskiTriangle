@@ -39,7 +39,6 @@
             this.pictureBox1.Size = new System.Drawing.Size(720, 720);
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
-            this.pictureBox1.SizeChanged += new System.EventHandler(this.pictureBox1_SizeChanged);
             // 
             // Form1
             // 

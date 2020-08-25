@@ -52,11 +52,11 @@ namespace IterationFractal
         void Render(IEnumerable<PointF> points)
         {
             Bitmap bitmap = new Bitmap(pictureBox1.Width, pictureBox1.Height, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
-
             Rectangle r = new Rectangle(0, 0, bitmap.Width, bitmap.Height);
             System.Drawing.Imaging.BitmapData bmpData = bitmap.LockBits(r, System.Drawing.Imaging.ImageLockMode.ReadWrite, bitmap.PixelFormat);
+            int stride = Math.Abs(bmpData.Stride);
 
-            int bytes = Math.Abs(bmpData.Stride) * bitmap.Height;
+            int bytes = stride * bitmap.Height;
             byte[] rgbValues = new byte[bytes];
             Array.Clear(rgbValues, 0, bytes);
 
@@ -65,8 +65,8 @@ namespace IterationFractal
                 int X = Convert.ToInt32(point.X);
                 int Y = Convert.ToInt32(point.Y);
 
-                rgbValues[Y * Math.Abs(bmpData.Stride) + X * 3 + 0] = 255; // синий
-                rgbValues[Y * Math.Abs(bmpData.Stride) + X * 3 + 1] = 255; // зеленый
+                rgbValues[Y * stride + X * 3 + 0] = 255; // синий
+                rgbValues[Y * stride + X * 3 + 1] = 255; // зеленый
             }
 
             System.Runtime.InteropServices.Marshal.Copy(rgbValues, 0, bmpData.Scan0, bytes);
@@ -78,11 +78,6 @@ namespace IterationFractal
         #endregion
 
         private void Form1_Load(object sender, EventArgs e)
-        {
-            Start();
-        }
-
-        private void pictureBox1_SizeChanged(object sender, EventArgs e)
         {
             Start();
         }
