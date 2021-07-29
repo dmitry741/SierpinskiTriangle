@@ -3,6 +3,11 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
+/* Урок "Фракталы."
+ * Все уроки на http://digitalmodels.ru
+ * 
+ */
+
 namespace IterationFractal
 {
     public partial class Form1 : Form
